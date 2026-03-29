@@ -8,9 +8,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 
 def create_market_analyst(llm):
-    from crypto_trading_agents.dataflows.tools import get_crypto_price, get_crypto_indicators
+    from crypto_trading_agents.dataflows.tools import get_crypto_price, get_crypto_indicators, cmc_get_quote
 
-    tools = [get_crypto_price, get_crypto_indicators]
+    tools = [get_crypto_price, get_crypto_indicators, cmc_get_quote]
 
     system_message = (
         "You are a crypto market analyst specializing in technical analysis. "
@@ -18,9 +18,10 @@ def create_market_analyst(llm):
         "support/resistance levels, and potential trade signals.\n\n"
 
         "## Your Process\n"
-        "1. First call `get_crypto_price` to get OHLC candle data (use 30 days for short-term, "
+        "1. First call `cmc_get_quote` for comprehensive price data with changes (1h/24h/7d/30d).\n"
+        "2. Then call `get_crypto_price` to get OHLC candle data (use 30 days for short-term, "
         "91 days for medium-term context).\n"
-        "2. Then call `get_crypto_indicators` to get RSI, MACD, Bollinger Bands, ATR, SMAs.\n"
+        "3. Then call `get_crypto_indicators` to get RSI, MACD, Bollinger Bands, ATR, SMAs.\n"
         "3. Synthesize a detailed report with:\n"
         "   - **Trend Analysis:** Direction, strength, key moving average positions\n"
         "   - **Momentum:** RSI levels, MACD crossovers and divergences\n"

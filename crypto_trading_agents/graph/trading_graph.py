@@ -33,11 +33,17 @@ from crypto_trading_agents.dataflows.tools import (
     get_top_coins_by_market_cap,
     get_crypto_news,
     get_derivatives_data,
+    cmc_get_quote,
+    cmc_get_global,
+    cmc_get_top_coins,
+    cmc_get_coin_info,
+    cmc_get_fear_greed,
 )
 
 from crypto_trading_agents.agents import (
     create_market_analyst,
     create_sentiment_analyst,
+    create_news_analyst,
     create_fundamentals_analyst,
     create_onchain_analyst,
     create_bull_researcher,
@@ -109,20 +115,22 @@ class CryptoTradingAgentsGraph:
 
         # Create tool nodes for analysts that use tools
         self.tool_nodes = {
-            "market": ToolNode([get_crypto_price, get_crypto_indicators]),
+            "market": ToolNode([get_crypto_price, get_crypto_indicators, cmc_get_quote]),
             "sentiment": ToolNode([
                 get_crypto_fear_greed, get_trending_coins,
                 get_global_crypto_market, get_top_coins_by_market_cap,
-                get_derivatives_data,
+                get_derivatives_data, cmc_get_global, cmc_get_fear_greed,
             ]),
             "news": ToolNode([get_crypto_news]),
             "fundamentals": ToolNode([
                 get_crypto_market_data, get_defi_tvl,
                 get_defi_protocol_info, get_top_coins_by_market_cap,
+                cmc_get_coin_info, cmc_get_quote,
             ]),
             "onchain": ToolNode([
                 get_crypto_market_data, get_global_crypto_market,
                 get_crypto_fear_greed, get_top_coins_by_market_cap,
+                cmc_get_quote, cmc_get_global,
             ]),
         }
 

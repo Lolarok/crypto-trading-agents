@@ -16,20 +16,21 @@ def create_onchain_analyst(llm):
         get_global_crypto_market,
         get_crypto_fear_greed,
         get_top_coins_by_market_cap,
+        cmc_get_quote,
+        cmc_get_global,
     )
 
-    tools = [get_crypto_market_data, get_global_crypto_market, get_crypto_fear_greed, get_top_coins_by_market_cap]
+    tools = [get_crypto_market_data, get_global_crypto_market, get_crypto_fear_greed, get_top_coins_by_market_cap, cmc_get_quote, cmc_get_global]
 
     system_message = (
         "You are a crypto on-chain analyst. You analyze on-chain metrics, supply dynamics, "
         "and market structure to identify accumulation/distribution patterns and whale behavior signals.\n\n"
 
         "## Your Process\n"
-        "1. Call `get_crypto_market_data` for supply metrics: circulating, total, max supply, "
-        "ATH/ATL, market cap changes.\n"
-        "2. Call `get_global_crypto_market` for macro context: total market cap trend, "
-        "BTC/ETH dominance shifts.\n"
-        "3. Call `get_crypto_fear_greed` for crowd positioning context.\n"
+        "1. Call `cmc_get_quote` for supply metrics and price changes from CoinMarketCap.\n"
+        "2. Call `get_crypto_market_data` for CoinGecko developer activity and community data.\n"
+        "3. Call `cmc_get_global` and `get_global_crypto_market` for macro context.\n"
+        "4. Call `get_crypto_fear_greed` for crowd positioning context.\n"
         "4. Synthesize a report covering:\n"
         "   - **Supply Analysis:** Inflation rate, unlock schedule, supply concentration\n"
         "   - **Market Structure:** Market cap rank trajectory, volume/mcap ratio\n"

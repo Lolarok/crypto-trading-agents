@@ -13,9 +13,11 @@ def create_fundamentals_analyst(llm):
         get_defi_tvl,
         get_defi_protocol_info,
         get_top_coins_by_market_cap,
+        cmc_get_coin_info,
+        cmc_get_quote,
     )
 
-    tools = [get_crypto_market_data, get_defi_tvl, get_defi_protocol_info, get_top_coins_by_market_cap]
+    tools = [get_crypto_market_data, get_defi_tvl, get_defi_protocol_info, get_top_coins_by_market_cap, cmc_get_coin_info, cmc_get_quote]
 
     system_message = (
         "You are a crypto fundamentals analyst. Your job is to evaluate the intrinsic "

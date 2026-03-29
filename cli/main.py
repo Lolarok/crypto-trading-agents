@@ -64,8 +64,8 @@ Providers: openai, anthropic, google, openrouter
     parser.add_argument(
         "--analysts",
         nargs="+",
-        default=["market", "sentiment", "fundamentals", "onchain"],
-        choices=["market", "sentiment", "fundamentals", "onchain"],
+        default=["market", "sentiment", "news", "fundamentals", "onchain"],
+        choices=["market", "sentiment", "news", "fundamentals", "onchain"],
         help="Analyst types to include",
     )
     parser.add_argument(

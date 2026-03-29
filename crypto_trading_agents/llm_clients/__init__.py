@@ -39,11 +39,16 @@ def create_llm(provider: str, model: str, base_url: Optional[str] = None, **kwar
         return ChatGoogleGenerativeAI(**params)
 
     elif provider == "openrouter":
+        import os
         from langchain_openai import ChatOpenAI
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY environment variable is required for openrouter provider")
         params = {
             "model": model,
             "temperature": 0.3,
             "base_url": "https://openrouter.ai/api/v1",
+            "api_key": api_key,
         }
         if base_url:
             params["base_url"] = base_url

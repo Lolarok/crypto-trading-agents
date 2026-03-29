@@ -340,3 +340,103 @@ def get_derivatives_data() -> str:
         return format_derivatives_report()
     except Exception as e:
         return f"Error fetching derivatives data: {e}"
+
+
+@tool
+def cmc_get_quote(
+    symbol: Annotated[str, "Coin symbol (e.g., BTC, ETH, SOL)"],
+) -> str:
+    """
+    Get price quote and market data from CoinMarketCap for a specific coin.
+    Includes price, market cap, volume, supply, and price changes (1h/24h/7d/30d).
+    Better rate limits than CoinGecko — prefer this for quotes.
+    """
+    try:
+        from crypto_trading_agents.dataflows.coinmarketcap import format_quote_report
+        return format_quote_report(symbol.upper())
+    except Exception as e:
+        return f"Error fetching CMC quote for {symbol}: {e}"
+
+
+@tool
+def cmc_get_global() -> str:
+    """
+    Get global crypto market metrics from CoinMarketCap: total market cap,
+    volume, BTC/ETH dominance, active cryptos and exchanges.
+    """
+    try:
+        from crypto_trading_agents.dataflows.coinmarketcap import format_global_report
+        return format_global_report()
+    except Exception as e:
+        return f"Error fetching CMC global data: {e}"
+
+
+@tool
+def cmc_get_top_coins(
+    limit: Annotated[int, "Number of top coins (default: 20)"] = 20,
+) -> str:
+    """
+    Get top cryptocurrencies by market cap from CoinMarketCap.
+    Better rate limits than CoinGecko for listings.
+    """
+    try:
+        from crypto_trading_agents.dataflows.coinmarketcap import format_listings_report
+        return format_listings_report(limit)
+    except Exception as e:
+        return f"Error fetching CMC listings: {e}"
+
+
+@tool
+def cmc_get_coin_info(
+    symbol: Annotated[str, "Coin symbol (e.g., BTC, ETH, SOL)"],
+) -> str:
+    """
+    Get detailed coin metadata from CoinMarketCap: description, category,
+    tags, website, explorer links, and technical details.
+    """
+    try:
+        from crypto_trading_agents.dataflows.coinmarketcap import get_coin_info
+        data = get_coin_info(symbol.upper())
+
+        lines = [
+            f"## {data.get('name', symbol)} ({data.get('symbol', symbol)})",
+            f"**Category:** {data.get('category', 'N/A')}",
+            f"**Slug:** {data.get('slug', 'N/A')}",
+        ]
+
+        desc = data.get("description", "")
+        if desc:
+            lines.extend(["", f"### Description", desc[:500] + ("..." if len(desc) > 500 else "")])
+
+        urls = data.get("urls", {})
+        if urls:
+            lines.append("")
+            for category, links in urls.items():
+                if links:
+                    lines.append(f"**{category.title()}:** {', '.join(links[:3])}")
+
+        tags = data.get("tags", [])
+        if tags:
+            lines.append(f"\n**Tags:** {', '.join(tags[:10])}")
+
+        return "\n".join(str(l) for l in lines)
+    except Exception as e:
+        return f"Error fetching CMC info for {symbol}: {e}"
+
+
+@tool
+def cmc_get_fear_greed() -> str:
+    """
+    Get Crypto Fear & Greed Index from CoinMarketCap.
+    Value from 0 (extreme fear) to 100 (extreme greed).
+    """
+    try:
+        from crypto_trading_agents.dataflows.coinmarketcap import get_fear_and_greed
+        data = get_fear_and_greed()
+        value = data.get("value", 0)
+        classification = data.get("value_classification", "Unknown")
+
+        from crypto_trading_agents.dataflows.fear_greed import format_fear_greed
+        return f"**CoinMarketCap Fear & Greed:** {format_fear_greed(int(value))}"
+    except Exception as e:
+        return f"Error fetching CMC Fear & Greed: {e}"
