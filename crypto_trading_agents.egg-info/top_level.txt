@@ -1,0 +1,2 @@
+cli
+crypto_trading_agents
