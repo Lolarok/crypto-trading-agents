@@ -58,5 +58,8 @@ class ConditionalLogic:
             return "Conservative Analyst"
         elif latest_speaker == "conservative":
             return "Neutral Analyst"
+        elif latest_speaker == "neutral":
+            return "Portfolio Manager"  # One full cycle done
         else:
-            return "Aggressive Analyst"
+            # Shouldn't happen — first speaker is always aggressive
+            return "Portfolio Manager"

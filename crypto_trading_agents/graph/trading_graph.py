@@ -244,12 +244,20 @@ class CryptoTradingAgentsGraph:
         workflow.add_conditional_edges(
             "Bull Researcher",
             self.conditional_logic.should_continue_debate,
-            {"Bear Researcher": "Bear Researcher", "Research Manager": "Research Manager"},
+            {
+                "Bull Researcher": "Bull Researcher",
+                "Bear Researcher": "Bear Researcher",
+                "Research Manager": "Research Manager",
+            },
         )
         workflow.add_conditional_edges(
             "Bear Researcher",
             self.conditional_logic.should_continue_debate,
-            {"Bull Researcher": "Bull Researcher", "Research Manager": "Research Manager"},
+            {
+                "Bull Researcher": "Bull Researcher",
+                "Bear Researcher": "Bear Researcher",
+                "Research Manager": "Research Manager",
+            },
         )
 
         # Wire: Research Manager → Trader → Risk chain
@@ -259,17 +267,29 @@ class CryptoTradingAgentsGraph:
         workflow.add_conditional_edges(
             "Aggressive Analyst",
             self.conditional_logic.should_continue_risk_analysis,
-            {"Conservative Analyst": "Conservative Analyst", "Portfolio Manager": "Portfolio Manager"},
+            {
+                "Aggressive Analyst": "Aggressive Analyst",
+                "Conservative Analyst": "Conservative Analyst",
+                "Portfolio Manager": "Portfolio Manager",
+            },
         )
         workflow.add_conditional_edges(
             "Conservative Analyst",
             self.conditional_logic.should_continue_risk_analysis,
-            {"Neutral Analyst": "Neutral Analyst", "Portfolio Manager": "Portfolio Manager"},
+            {
+                "Aggressive Analyst": "Aggressive Analyst",
+                "Neutral Analyst": "Neutral Analyst",
+                "Portfolio Manager": "Portfolio Manager",
+            },
         )
         workflow.add_conditional_edges(
             "Neutral Analyst",
             self.conditional_logic.should_continue_risk_analysis,
-            {"Aggressive Analyst": "Aggressive Analyst", "Portfolio Manager": "Portfolio Manager"},
+            {
+                "Aggressive Analyst": "Aggressive Analyst",
+                "Neutral Analyst": "Neutral Analyst",
+                "Portfolio Manager": "Portfolio Manager",
+            },
         )
 
         workflow.add_edge("Portfolio Manager", END)

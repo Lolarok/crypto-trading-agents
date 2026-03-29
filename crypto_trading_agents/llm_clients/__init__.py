@@ -49,6 +49,7 @@ def create_llm(provider: str, model: str, base_url: Optional[str] = None, **kwar
             "temperature": 0.3,
             "base_url": "https://openrouter.ai/api/v1",
             "api_key": api_key,
+            "max_tokens": 4096,
         }
         if base_url:
             params["base_url"] = base_url
