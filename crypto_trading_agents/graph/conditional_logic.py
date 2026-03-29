@@ -21,6 +21,11 @@ class ConditionalLogic:
             return "tools_sentiment"
         return "Msg Clear Sentiment"
 
+    def should_continue_news(self, state: AgentState) -> str:
+        if state["messages"][-1].tool_calls:
+            return "tools_news"
+        return "Msg Clear News"
+
     def should_continue_fundamentals(self, state: AgentState) -> str:
         if state["messages"][-1].tool_calls:
             return "tools_fundamentals"

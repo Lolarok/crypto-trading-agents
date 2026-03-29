@@ -1,0 +1,81 @@
+name: Daily Crypto Analysis
+
+on:
+  schedule:
+    - cron: '0 7 * * *'  # 07:00 UTC daily
+  workflow_dispatch:
+    inputs:
+      crypto:
+        description: 'CoinGecko coin ID'
+        required: true
+        default: 'bitcoin'
+      date:
+        description: 'Analysis date (YYYY-MM-DD)'
+        required: false
+        default: ''
+
+env:
+  CRYPTO_LLM_PROVIDER: openai
+  CRYPTO_DEEP_THINK_LLM: gpt-4o
+  CRYPTO_QUICK_THINK_LLM: gpt-4o-mini
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        crypto:
+          - bitcoin
+          - ethereum
+          - solana
+      fail-fast: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Determine crypto
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "crypto=${{ github.event.inputs.crypto }}" >> $GITHUB_OUTPUT
+            echo "date=${{ github.event.inputs.date }}" >> $GITHUB_OUTPUT
+          else
+            echo "crypto=${{ matrix.crypto }}" >> $GITHUB_OUTPUT
+            echo "date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run analysis
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python -m cli.main ${{ steps.vars.outputs.crypto }} \
+            --date ${{ steps.vars.outputs.date }} \
+            --provider openai \
+            --analysts market sentiment fundamentals onchain \
+            --debate-rounds 2 \
+            --risk-rounds 2
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-${{ steps.vars.outputs.crypto }}-${{ steps.vars.outputs.date }}
+          path: results/
+          retention-days: 30
+
+      - name: Commit results (optional)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/ || true
+          git diff --cached --quiet || git commit -m "analysis: ${{ steps.vars.outputs.crypto }} ${{ steps.vars.outputs.date }}"
+          git push || true

@@ -299,3 +299,44 @@ def get_top_coins_by_market_cap(
         return "\n".join(lines)
     except Exception as e:
         return f"Error fetching top coins: {e}"
+
+
+@tool
+def get_crypto_news(
+    sources: Annotated[str, "Comma-separated source names: coindesk,cointelegraph,decrypt,theblock,bitcoinmagazine,cryptoslate (or 'all')"] = "all",
+    limit_per_source: Annotated[int, "Max articles per source (default: 5)"] = 5,
+    keyword: Annotated[str, "Optional keyword to filter articles"] = "",
+) -> str:
+    """
+    Fetch latest crypto news from major RSS feeds (CoinDesk, CoinTelegraph, Decrypt, The Block, etc).
+    Useful for sentiment and news analysis. Can filter by keyword.
+    """
+    try:
+        from crypto_trading_agents.dataflows.rss_news import (
+            fetch_crypto_news, format_news_report, search_news,
+        )
+
+        source_list = None if sources == "all" else [s.strip() for s in sources.split(",")]
+        articles = fetch_crypto_news(sources=source_list, limit_per_source=limit_per_source)
+
+        if keyword:
+            articles = search_news(articles, keyword)
+            if not articles:
+                return f"No news articles found matching '{keyword}'."
+
+        return format_news_report(articles)
+    except Exception as e:
+        return f"Error fetching crypto news: {e}"
+
+
+@tool
+def get_derivatives_data() -> str:
+    """
+    Get crypto derivatives market data: open interest, trading volumes,
+    and exchange rankings. Useful for gauging leveraged market positioning.
+    """
+    try:
+        from crypto_trading_agents.dataflows.derivatives import format_derivatives_report
+        return format_derivatives_report()
+    except Exception as e:
+        return f"Error fetching derivatives data: {e}"

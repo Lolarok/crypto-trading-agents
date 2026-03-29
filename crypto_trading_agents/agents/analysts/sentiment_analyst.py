@@ -13,9 +13,10 @@ def create_sentiment_analyst(llm):
         get_trending_coins,
         get_global_crypto_market,
         get_top_coins_by_market_cap,
+        get_derivatives_data,
     )
 
-    tools = [get_crypto_fear_greed, get_trending_coins, get_global_crypto_market, get_top_coins_by_market_cap]
+    tools = [get_crypto_fear_greed, get_trending_coins, get_global_crypto_market, get_top_coins_by_market_cap, get_derivatives_data]
 
     system_message = (
         "You are a crypto sentiment analyst. Your job is to gauge market mood "
@@ -26,7 +27,8 @@ def create_sentiment_analyst(llm):
         "2. Call `get_global_crypto_market` for total market cap, BTC dominance, and 24h change.\n"
         "3. Call `get_trending_coins` to see what the crowd is watching.\n"
         "4. Call `get_top_coins_by_market_cap` for broad market context.\n"
-        "5. Synthesize a report covering:\n"
+        "5. Call `get_derivatives_data` for open interest and leverage positioning.\n"
+        "6. Synthesize a report covering:\n"
         "   - **Overall Sentiment:** Fear/Greed level and what it implies\n"
         "   - **Market Context:** BTC dominance trend, total market cap direction\n"
         "   - **Crowd Behavior:** What's trending and why — hype vs fundamentals\n"

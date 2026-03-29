@@ -2,6 +2,7 @@
 
 from crypto_trading_agents.agents.analysts.market_analyst import create_market_analyst
 from crypto_trading_agents.agents.analysts.sentiment_analyst import create_sentiment_analyst
+from crypto_trading_agents.agents.analysts.news_analyst import create_news_analyst
 from crypto_trading_agents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
 from crypto_trading_agents.agents.analysts.onchain_analyst import create_onchain_analyst
 from crypto_trading_agents.agents.researchers.bull_researcher import create_bull_researcher

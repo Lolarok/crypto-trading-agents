@@ -19,5 +19,5 @@ DEFAULT_CONFIG = {
     "max_risk_discuss_rounds": 2,
     "max_recur_limit": 100,
     # Analyst selection
-    "selected_analysts": ["market", "sentiment", "fundamentals", "onchain"],
+    "selected_analysts": ["market", "sentiment", "news", "fundamentals", "onchain"],
 }

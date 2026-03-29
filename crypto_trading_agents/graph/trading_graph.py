@@ -31,6 +31,8 @@ from crypto_trading_agents.dataflows.tools import (
     get_trending_coins,
     get_global_crypto_market,
     get_top_coins_by_market_cap,
+    get_crypto_news,
+    get_derivatives_data,
 )
 
 from crypto_trading_agents.agents import (
@@ -111,7 +113,9 @@ class CryptoTradingAgentsGraph:
             "sentiment": ToolNode([
                 get_crypto_fear_greed, get_trending_coins,
                 get_global_crypto_market, get_top_coins_by_market_cap,
+                get_derivatives_data,
             ]),
+            "news": ToolNode([get_crypto_news]),
             "fundamentals": ToolNode([
                 get_crypto_market_data, get_defi_tvl,
                 get_defi_protocol_info, get_top_coins_by_market_cap,
@@ -159,6 +163,7 @@ class CryptoTradingAgentsGraph:
         analyst_factories = {
             "market": create_market_analyst,
             "sentiment": create_sentiment_analyst,
+            "news": create_news_analyst,
             "fundamentals": create_fundamentals_analyst,
             "onchain": create_onchain_analyst,
         }
