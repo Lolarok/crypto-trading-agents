@@ -15,9 +15,9 @@ on:
         default: ''
 
 env:
-  CRYPTO_LLM_PROVIDER: openai
-  CRYPTO_DEEP_THINK_LLM: gpt-4o
-  CRYPTO_QUICK_THINK_LLM: gpt-4o-mini
+  CRYPTO_LLM_PROVIDER: google
+  CRYPTO_DEEP_THINK_LLM: gemini-2.5-flash
+  CRYPTO_QUICK_THINK_LLM: gemini-2.5-flash
 
 jobs:
   analyze:
@@ -56,11 +56,11 @@ jobs:
 
       - name: Run analysis
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
           python -m cli.main ${{ steps.vars.outputs.crypto }} \
             --date ${{ steps.vars.outputs.date }} \
-            --provider openai \
+            --provider google \
             --analysts market sentiment fundamentals onchain \
             --debate-rounds 2 \
             --risk-rounds 2
