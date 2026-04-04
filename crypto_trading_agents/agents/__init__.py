@@ -1,0 +1,15 @@
+"""Agents package — re-exports all agent creation functions."""
+
+from crypto_trading_agents.agents.analysts.market_analyst import create_market_analyst
+from crypto_trading_agents.agents.analysts.sentiment_analyst import create_sentiment_analyst
+from crypto_trading_agents.agents.analysts.news_analyst import create_news_analyst
+from crypto_trading_agents.agents.analysts.fundamentals_analyst import create_fundamentals_analyst
+from crypto_trading_agents.agents.analysts.onchain_analyst import create_onchain_analyst
+from crypto_trading_agents.agents.researchers.bull_researcher import create_bull_researcher
+from crypto_trading_agents.agents.researchers.bear_researcher import create_bear_researcher
+from crypto_trading_agents.agents.managers.research_manager import create_research_manager
+from crypto_trading_agents.agents.managers.portfolio_manager import create_portfolio_manager
+from crypto_trading_agents.agents.trader.trader import create_trader
+from crypto_trading_agents.agents.risk_mgmt.aggressive_debator import create_aggressive_debator
+from crypto_trading_agents.agents.risk_mgmt.conservative_debator import create_conservative_debator
+from crypto_trading_agents.agents.risk_mgmt.neutral_debator import create_neutral_debator

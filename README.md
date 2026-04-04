@@ -1,0 +1,390 @@
+# 🤖 Crypto Trading Agents
+
+**Multi-Agent LLM framework for cryptocurrency analysis.**  
+10 AI agents collaborate to produce a single trading signal: **BUY / SELL / HOLD**.
+
+Inspired by [TradingAgents](https://github.com/TauricResearch/TradingAgents) (42k⭐) — adapted for crypto with free data sources and zero API keys for market data.
+
+---
+
+## How It Works
+
+The framework mirrors how a real trading desk operates: specialized analysts research independently, then debate their findings before a final decision is made.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      ANALYST TEAM (parallel)                    │
+│                                                                 │
+│  📊 Market        😊 Sentiment       📈 Fundamentals    🔗 On-Chain  │
+│  Analyst          Analyst            Analyst            Analyst    │
+│  (RSI, MACD,     (Fear & Greed,    (TVL, tokenomics,  (supply,    │
+│   Bollinger,      trending,         dev activity)      market     │
+│   price action)   global mood)                         structure) │
+└────────┬──────────────┬────────────────┬──────────────────┬──────┘
+         │              │                │                  │
+         ▼              ▼                ▼                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    RESEARCH DEBATE (2 rounds)                    │
+│                                                                 │
+│  🐂 Bull Researcher  ◄──── debate ────►  🐻 Bear Researcher     │
+│  (growth, catalysts,                      (risks, overvaluation,│
+│   adoption trends)                        regulatory threats)   │
+│                            │                                    │
+│                            ▼                                    │
+│                   🧠 Research Manager                            │
+│                   (judges the debate,                            │
+│                    creates investment plan)                      │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      📋 TRADER AGENT                             │
+│  Translates the investment plan into a concrete trade:          │
+│  entry price, position size, stop loss, take profit targets     │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   RISK DEBATE (2 rounds)                         │
+│                                                                 │
+│  🔴 Aggressive     ⚖️ Neutral        🟢 Conservative            │
+│  ("size up,        ("risk/reward      ("preserve capital,       │
+│   momentum         ratio, position    wider stops, smaller      │
+│   matters")        sizing math")      positions")               │
+│                            │                                    │
+│                            ▼                                    │
+│                   🏦 Portfolio Manager                            │
+│                   (FINAL DECISION:                               │
+│                    BUY / SELL / HOLD)                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## The Agents, Explained
+
+### 📊 Market Analyst — "What is the price doing?"
+
+Fetches OHLCV candle data from CoinGecko and computes technical indicators:
+
+| Indicator | What it measures |
+|-----------|-----------------|
+| RSI (14) | Overbought (>70) / oversold (<30) |
+| MACD | Momentum crossovers and divergences |
+| Bollinger Bands | Volatility expansion/squeeze, mean reversion |
+| ATR (14) | Average true range — volatility measurement |
+| SMA 20/50 | Trend direction, support/resistance levels |
+| EMA 10 | Short-term momentum shifts |
+
+**Output:** Trend analysis, momentum signals, key price levels, directional bias.
+
+---
+
+### 😊 Sentiment Analyst — "What does the crowd think?"
+
+Measures market psychology through three lenses:
+
+- **Fear & Greed Index** (0–100): 0–25 = extreme fear (buy opportunity?), 75–100 = extreme greed (take profits?)
+- **Trending Coins**: What's the crowd watching right now — hype or substance?
+- **Global Market Context**: Total market cap direction, BTC/ETH dominance shifts
+
+| Fear & Greed | Interpretation |
+|-------------|----------------|
+| 0–25 😱 | Extreme Fear — historically good buying zones |
+| 25–45 😟 | Fear — cautious optimism |
+| 45–55 😐 | Neutral — wait for clearer signals |
+| 55–75 😊 | Greed — healthy trend, watch for exits |
+| 75–100 🤑 | Extreme Greed — consider taking profits |
+
+**Output:** Sentiment assessment, crowd behavior analysis, contrarian signals.
+
+---
+
+### 📈 Fundamentals Analyst — "Is this project healthy?"
+
+Evaluates intrinsic value through protocol metrics:
+
+- **Tokenomics**: Supply schedule, inflation, circulating vs max supply
+- **DeFi TVL** (via DeFiLlama): Total Value Locked, TVL by chain
+- **Developer Activity**: GitHub commits, PRs, stars (from CoinGecko)
+- **Community Health**: Twitter followers, Reddit subscribers
+- **Valuation**: Market cap relative to TVL, revenue, peers
+
+**Key ratios:**
+- FDV/TVL > 5 → potentially overvalued
+- FDV/TVL < 1 → potentially undervalued
+- Declining TVL + rising price → divergence warning
+
+**Output:** Fundamental assessment, red flags, competitive positioning.
+
+---
+
+### 🔗 On-Chain Analyst — "What are the smart money signals?"
+
+**This is the new analyst that doesn't exist in the original TradingAgents.**
+
+Analyzes crypto-specific on-chain metrics:
+
+- **Supply Analysis**: Inflation rate, unlock schedules, circulating %
+- **Market Structure**: Volume/Market Cap ratio, rank trajectory
+- **Relative Strength**: Performance vs BTC and ETH
+- **Accumulation/Distribution**: Price vs on-chain metric divergences
+
+| Signal | Interpretation |
+|--------|----------------|
+| Vol/MCap > 0.1 | High activity — potential breakout/breakdown |
+| Vol/MCap < 0.02 | Low activity — consolidation |
+| Price near ATL + high volume | Accumulation zone |
+| Price near ATH + declining volume | Distribution zone |
+| Rising market cap rank | Growing relative strength |
+
+**Output:** On-chain assessment, supply risk, market structure analysis.
+
+---
+
+### 🐂🐻 Bull vs Bear Debate
+
+After all analysts report, two researchers argue opposite sides:
+
+**Bull Researcher** builds the case FOR:
+- Network effects, ecosystem growth
+- Institutional adoption trends
+- Protocol revenue and fee generation
+- Supply scarcity dynamics
+
+**Bear Researcher** builds the case AGAINST:
+- Token inflation and unlock schedules
+- Declining TVL or user activity
+- Regulatory crackdown risk
+- Competitive displacement
+
+They debate for **2 rounds** (configurable), then the **Research Manager** judges and creates an investment plan.
+
+---
+
+### 📋 Trader Agent
+
+Takes the investment plan and turns it into a concrete trade:
+- **Action**: BUY / SELL / HOLD
+- **Position Size**: Conservative / Moderate / Aggressive
+- **Entry Strategy**: Market or limit at specific levels
+- **Stop Loss**: Price level or percentage
+- **Take Profit**: Multiple TP targets
+- **Timeframe**: Expected holding period
+
+**Rules:** Never >25% position size. Always define stop loss before entry.
+
+---
+
+### 🔴⚖️🟢 Risk Debate
+
+Three analysts argue risk from different perspectives:
+
+| Agent | Stance | Focus |
+|-------|--------|-------|
+| 🔴 Aggressive | "Act now" | Momentum, asymmetric risk/reward, opportunity cost |
+| ⚖️ Neutral | "Be smart" | Risk/reward ratios, Kelly criterion, position sizing |
+| 🟢 Conservative | "Protect capital" | Downside scenarios, tail risks, stablecoin reserves |
+
+They debate for **2 rounds**, then the **Portfolio Manager** makes the final call.
+
+---
+
+### 🏦 Portfolio Manager — The Final Word
+
+Reviews everything and produces the **FINAL TRANSACTION PROPOSAL**:
+- Decision: **BUY / SELL / HOLD**
+- Confidence: 1–10
+- Position size and risk management parameters
+- Conditions to re-evaluate
+
+**Portfolio rules:** Never risk >2% on single trade. Maintain 20% stablecoin reserve in bear markets.
+
+---
+
+## Data Sources
+
+All market data is **free** — no API keys needed.
+
+| Source | What | Cost |
+|--------|------|------|
+| [CoinGecko](https://www.coingecko.com/en/api) | Prices, OHLCV, market data, trending | Free (rate-limited) |
+| [DeFiLlama](https://defillama.com/) | TVL, DEX volumes, protocol fees | Free |
+| [Alternative.me](https://alternative.me/crypto/fear-and-greed-index/) | Fear & Greed Index | Free |
+
+You only need an **LLM API key** for the agents' reasoning:
+- **OpenAI** (`OPENAI_API_KEY`) — GPT-4o, GPT-4o-mini
+- **Anthropic** (`ANTHROPIC_API_KEY`) — Claude
+- **Google** (`GOOGLE_API_KEY`) — Gemini
+- **OpenRouter** (`OPENROUTER_API_KEY`) — access to 100+ models
+
+---
+
+## Installation
+
+```bash
+cd crypto-trading-agents
+pip install -e .
+```
+
+Set your LLM key (pick one):
+
+```bash
+export OPENAI_API_KEY=sk-...
+# or
+export ANTHROPIC_API_KEY=sk-ant-...
+# or
+export GOOGLE_API_KEY=...
+```
+
+Or create a `.env` file:
+
+```bash
+cp .env.example .env
+# edit .env with your key
+```
+
+---
+
+## Usage
+
+### CLI
+
+```bash
+# Bitcoin analysis (today)
+crypto-agents bitcoin
+
+# Ethereum on a specific date
+crypto-agents ethereum --date 2026-03-29
+
+# Solana with Claude
+crypto-agents solana --provider anthropic
+
+# Only technical + sentiment analysis
+crypto-agents bitcoin --analysts market sentiment
+
+# Debug mode — see every agent's reasoning
+crypto-agents bitcoin --debug
+
+# More debate rounds = more thorough (but slower + more tokens)
+crypto-agents bitcoin --debate-rounds 3 --risk-rounds 3
+```
+
+### Python API
+
+```python
+from crypto_trading_agents.graph.trading_graph import CryptoTradingAgentsGraph
+from crypto_trading_agents.default_config import DEFAULT_CONFIG
+
+# Configure
+config = DEFAULT_CONFIG.copy()
+config["llm_provider"] = "openai"
+config["deep_think_llm"] = "gpt-4o"        # Research Manager + Portfolio Manager
+config["quick_think_llm"] = "gpt-4o-mini"  # Everyone else
+
+# Run
+ta = CryptoTradingAgentsGraph(debug=True, config=config)
+final_state, decision = ta.propagate("Bitcoin", "bitcoin", "2026-03-29")
+
+print(decision)  # → "BUY" / "SELL" / "HOLD"
+
+# Access individual reports
+print(final_state["market_report"])
+print(final_state["sentiment_report"])
+print(final_state["fundamentals_report"])
+print(final_state["onchain_report"])
+print(final_state["final_trade_decision"])
+```
+
+### With Memory (Learn from Past Decisions)
+
+```python
+# After getting actual returns, update agent memories
+ta.reflect_and_remember(returns_losses=5.2)  # +5.2% profit
+ta.reflect_and_remember(returns_losses=-3.1) # -3.1% loss
+
+# Next time, agents will reference these past outcomes
+# when making new decisions
+```
+
+---
+
+## Configuration
+
+All settings via environment variables or `.env`:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CRYPTO_LLM_PROVIDER` | `openai` | LLM provider: openai, anthropic, google, openrouter |
+| `CRYPTO_DEEP_THINK_LLM` | `gpt-4o` | Model for research manager + portfolio manager |
+| `CRYPTO_QUICK_THINK_LLM` | `gpt-4o-mini` | Model for analysts + researchers + risk agents |
+| `CRYPTO_BACKEND_URL` | — | Custom API base URL |
+| `CRYPTOAGENTS_RESULTS_DIR` | `./results` | Where to save analysis outputs |
+
+Programmatic config:
+
+```python
+config = DEFAULT_CONFIG.copy()
+config["max_debate_rounds"] = 3          # More debate rounds
+config["max_risk_discuss_rounds"] = 3    # More risk discussion
+config["selected_analysts"] = ["market", "onchain"]  # Pick analysts
+```
+
+---
+
+## Output
+
+Each analysis produces a JSON file in `results/{coin_id}/analysis_{date}.json`:
+
+```json
+{
+  "crypto_of_interest": "Bitcoin",
+  "coin_id": "bitcoin",
+  "trade_date": "2026-03-29",
+  "market_report": "📊 Trend Analysis: BTC is trading above 50 SMA...",
+  "sentiment_report": "😊 Fear & Greed at 42 (Fear) — improving...",
+  "fundamentals_report": "📈 TVL $45B, developer activity strong...",
+  "onchain_report": "🔗 Circulating supply 19.8M/21M, rank #1 stable...",
+  "investment_plan": "Verdict: BULLISH, Confidence: Medium...",
+  "trader_investment_plan": "BUY with 15% position, SL at $78,000...",
+  "final_trade_decision": "FINAL TRANSACTION PROPOSAL: **BUY**..."
+}
+```
+
+---
+
+## Comparison with Original TradingAgents
+
+| Aspect | TradingAgents (TradFi) | This Project (Crypto) |
+|--------|----------------------|----------------------|
+| Markets | Stocks (AAPL, NVDA) | Crypto (BTC, ETH, SOL) |
+| Data | Yahoo Finance, Alpha Vantage (API keys) | CoinGecko, DeFiLlama (free) |
+| Analysts | Market, Social, News, Fundamentals | Market, Sentiment, Fundamentals, **On-Chain** |
+| Fundamentals | Balance sheet, cashflow, income statement | TVL, tokenomics, dev activity, supply |
+| Risk factors | Earnings, macro, sector rotation | Exchange hacks, unlock schedules, whale dumps, regulatory |
+| Market hours | Exchange hours (9:30–4pm) | 24/7 (weekend liquidity matters) |
+| Sentiment | Social media scraping | Fear & Greed Index, trending |
+
+---
+
+## Token Cost Estimate
+
+Per analysis run (with GPT-4o-mini for quick agents, GPT-4o for deep agents):
+
+| Component | Est. tokens |
+|-----------|------------|
+| 4 Analysts (with tool calls) | ~15k–25k |
+| Bull/Bear Debate (2 rounds) | ~8k–12k |
+| Research Manager | ~3k–5k |
+| Trader | ~3k–5k |
+| Risk Debate (2 rounds, 3 agents) | ~10k–15k |
+| Portfolio Manager | ~3k–5k |
+| **Total** | **~40k–70k tokens** |
+
+Cost at GPT-4o-mini pricing (~$0.15/1M input): **~$0.006–$0.01 per run**.
+
+---
+
+## License
+
+MIT

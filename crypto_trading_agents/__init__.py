@@ -1,0 +1,2 @@
+# crypto_trading_agents package
+__version__ = "0.1.0"
