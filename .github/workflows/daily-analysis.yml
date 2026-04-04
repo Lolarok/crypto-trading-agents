@@ -54,7 +54,12 @@ jobs:
             echo "date=$(date -u +%Y-%m-%d)" >> $GITHUB_OUTPUT
           fi
 
+      - name: Check API key
+        id: check
+        run: echo "has_key=${{ secrets.GOOGLE_API_KEY != '' }}" >> $GITHUB_OUTPUT
+
       - name: Run analysis
+        if: steps.check.outputs.has_key == 'true'
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
         run: |
@@ -66,6 +71,7 @@ jobs:
             --risk-rounds 2
 
       - name: Upload results
+        if: steps.check.outputs.has_key == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: analysis-${{ steps.vars.outputs.crypto }}-${{ steps.vars.outputs.date }}
@@ -73,9 +79,14 @@ jobs:
           retention-days: 30
 
       - name: Commit results (optional)
+        if: steps.check.outputs.has_key == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add results/ || true
           git diff --cached --quiet || git commit -m "analysis: ${{ steps.vars.outputs.crypto }} ${{ steps.vars.outputs.date }}"
           git push || true
+
+      - name: Skip notice
+        if: steps.check.outputs.has_key != 'true'
+        run: echo "⏭️ Skipped — add GOOGLE_API_KEY secret to enable. Get one free at https://aistudio.google.com"
