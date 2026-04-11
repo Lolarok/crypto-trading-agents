@@ -59,6 +59,7 @@ from crypto_trading_agents.agents import (
 from crypto_trading_agents.graph.conditional_logic import ConditionalLogic
 from crypto_trading_agents.graph.propagation import Propagator
 from crypto_trading_agents.graph.signal_processing import SignalProcessor
+from crypto_trading_agents.optimizer import TokenOptimizer
 
 from langgraph.graph import END, StateGraph, START
 
@@ -141,6 +142,11 @@ class CryptoTradingAgentsGraph:
         )
         self.propagator = Propagator(max_recur_limit=self.config["max_recur_limit"])
         self.signal_processor = SignalProcessor()
+
+        # Token optimizer (optional, enabled via config)
+        self.optimizer = None
+        if self.config.get("optimize_tokens", False):
+            self.optimizer = TokenOptimizer(verbose=debug)
 
         # State tracking
         self.curr_state = None
