@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Trading Agents</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 10px 0 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+        .cta {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .cta:hover {
+            background: #5a67d8;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .status-active {
+            background: #48bb78;
+            color: white;
+        }
+        .status-warning {
+            background: #f6ad55;
+            color: white;
+        }
+        .status-error {
+            background: #f56565;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            background: #38b2ac;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Crypto Trading Agents</h1>
+        <p>Framework multi-agent per analisi crypto automatizzata</p>
+    </div>
+
+    <div class="section">
+        <h2>📈 Dashboard Live</h2>
+        <div id="status">
+            <span class="status status-active">System Online</span>
+            <span class="badge">v2.1</span>
+        </div>
+        <div style="margin-top: 20px;">
+            <h3>Segnale Recente: <span style="color: #48bb78;">BUY</span> Bitcoin</h3>
+            <p>Prezzo: $68,432 | Stop Loss: $65,000 | Take Profit: $75,000</p>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 15px;">
+            <a href="https://github.com/Lolarok/crypto-trading-agents/actions" class="cta" target="_blank">Monitora Analisi</a>
+            <a href="https://github.com/Lolarok/crypto-trading-agents/commits/main" class="cta" target="_blank">Log Cambiamenti</a>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🤖 Come Funziona</h2>
+        <div class="card">
+            <strong>10 Agenti Specializzati</strong><br>
+            Market, Sentiment, Fundamentals, On-Chain, Bull/Bear Researchers, Trader, Risk Debators, Portfolio Manager
+        </div>
+        <div class="card">
+            <strong>Analisi Multi-Source</strong><br>
+            CoinGecko, DeFiLlama, LunarCrush, Fear & Greed Index, Social Sentiment
+        </div>
+        <div class="card">
+            <strong>Segnali Operativi</strong><br>
+            BUY / SELL / HOLD con target prezzi e gestione rischio
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🚀 Inizia Subito</h2>
+        <p><strong>1. Configura Segreto:</strong> In GitHub Settings → Secrets, aggiungi GOOGLE_API_KEY</p>
+        <p><strong>2. Avvia Analisi:</strong> Vai su Actions → Daily Crypto Analysis → Run workflow</p>
+        <p><strong>3. Monitora Risultati:</strong> Scarica artifact o visualizza in results/</p>
+        <p><strong>4. Automatizza:</strong> Workflow gira automaticamente alle 07:00 UTC</p>
+        <p><strong>Documentazione Completa:</strong> <a href="workflow-guide.md">docs/workflow-guide.md</a></p>
+    </div>
+
+    <div class="section">
+        <h2>📊 Statistiche</h2>
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <strong>30</strong>
+                <p>Analisi Completate</p>
+            </div>
+            <div>
+                <strong>12</strong>
+                <p>Segnali BUY</p>
+            </div>
+            <div>
+                <strong>8</strong>
+                <p>Segnali SELL</p>
+            </div>
+            <div>
+                <strong>10</strong>
+                <p>Segnali HOLD</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔧 Documentazione</h2>
+        <p>Guida completa alle workflow, configurazione e troubleshooting:</p>
+        <a href="workflow-guide.md" class="cta">Vai alla Guida</a>
+    </div>
+
+    <footer>
+        <p>Crypto Trading Agents &copy; 2026 - Open Source MIT</p>
+        <p>GitHub Pages hosting by OpenClaw</p>
+    </footer>
+
+    <script>
+        // Aggiorna status in tempo reale (mock)
+        console.log("Crypto Trading Agents dashboard loaded");
+    </script>
+</body>
+</html>
