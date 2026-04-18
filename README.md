@@ -385,6 +385,24 @@ Cost at GPT-4o-mini pricing (~$0.15/1M input): **~$0.006–$0.01 per run**.
 
 ---
 
+## Integration with SignalHub
+
+Results from `crypto-trading-agents` can be displayed directly in the [SignalHub](https://github.com/Lolarok/signalhub) frontend:
+
+1. Run analysis for a coin:
+   ```bash
+   crypto-agents bitcoin
+   ```
+2. Sync the latest JSON to SignalHub's public folder:
+   ```bash
+   python3 crypto_trading_agents/scripts/sync_ta_results.py
+   ```
+3. Open SignalHub (dev or deployed); clicking a coin row shows the AI analysis panel.
+
+The sync script copies `results/{coin}/analysis_latest.json` → `signalhub/public/results/{coin}/analysis_latest.json`. This decoupled approach keeps both projects independent while enabling a unified dashboard.
+
+---
+
 ## License
 
 MIT
